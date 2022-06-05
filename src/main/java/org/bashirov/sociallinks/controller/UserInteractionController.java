@@ -25,6 +25,7 @@ public class UserInteractionController {
         Map<Long, List<InteractionNumAndAcceptorUserId>> graph = null;
         try {
             graph = dao.getUserInteractionGraph();
+            graph.forEach((key, value) -> value.forEach(InteractionNumAndAcceptorUserId::setInteractionLevel));
         } catch (SQLException sql) {
             LOGGER.error("SQLException while closing connection \n{}", sql.toString());
         }

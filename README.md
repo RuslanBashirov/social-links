@@ -31,6 +31,7 @@ In application.properties file set
  - server port
  - database's _url, username and password_  
  - logging levels and path to logs  
+ - percent levels of minimum and maximum user interactions
 
 Run main method of SocialLinksApplication class or deploy social-links.jar
 ## Usage
@@ -48,14 +49,17 @@ In response one gets response in JSON form, for example:
     "1": [
         {
             "interactionNum": 23,
-            "acceptorUserId": 4
+            "acceptorUserId": 4,
+            "interactionLevel": "AVERAGE"
         },
         {
             "interactionNum": 5,
-            "acceptorUserId": 67
+            "acceptorUserId": 67,
+            "interactionLevel": "MINIMUM"
         }
     ]
 }
 ```
-means user with id = 1 had 23 interactions with user with id = 4  
-and 5 interactions with user with id = 67
+means user with id = 1  
+had 23 interactions (this value is between minimum and maximum relatively to the biggest interaction number in graph) with user with id = 4  
+and 5 interactions (this value is minimum) with user with id = 67

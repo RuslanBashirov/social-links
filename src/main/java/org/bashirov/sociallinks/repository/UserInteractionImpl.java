@@ -25,6 +25,12 @@ public class UserInteractionImpl implements UserInteractionService {
     @Value("${db.password}")
     private String dbPassword;
 
+    @Value("#{T(java.lang.Long).parseLong('${interaction.min.level.percent}')}")
+    private Long interactionMinLevelPercent;
+
+    @Value("#{T(java.lang.Long).parseLong('${interaction.max.level.percent}')}")
+    private Long interactionMaxLevelPercent;
+
     @Override
     public Connection getConnection() throws SQLException {
         Connection con = DriverManager.getConnection(dbUrl, dbUser, dbPassword);
@@ -47,6 +53,7 @@ public class UserInteractionImpl implements UserInteractionService {
                     "group by initiator_user_id, acceptor_user_id");
             rs = st.executeQuery();
 
+            long interactionMaxNum = 0;
             while (rs.next()) {
                 long initiatorUserId = rs.getLong("initiator_user_id");
                 long interactionNum = rs.getLong("interaction_cnt");
@@ -55,7 +62,13 @@ public class UserInteractionImpl implements UserInteractionService {
                 graph.putIfAbsent(initiatorUserId, new ArrayList<>());
                 graph.get(initiatorUserId)
                         .add(new InteractionNumAndAcceptorUserId(interactionNum, acceptorUserId));
+
+                if (interactionNum > interactionMaxNum) {
+                    interactionMaxNum = interactionNum;
+                }
             }
+
+            setMinAndMaxLevelNumsOfUserInteractions(interactionMaxNum);
 
             LOGGER.debug("Got graph of size = {}", graph.size());
         } catch (SQLException sql) {
@@ -90,5 +103,10 @@ public class UserInteractionImpl implements UserInteractionService {
             Util.closeSt(st);
             Util.closeCon(con);
         }
+    }
+
+    private void setMinAndMaxLevelNumsOfUserInteractions(long interactionMaxNum) {
+        InteractionNumAndAcceptorUserId.INTERACTION_MIN_LEVEL_NUM = (interactionMinLevelPercent * interactionMaxNum) / 100;
+        InteractionNumAndAcceptorUserId.INTERACTION_MAX_LEVEL_NUM = (interactionMaxLevelPercent * interactionMaxNum) / 100;
     }
 }
