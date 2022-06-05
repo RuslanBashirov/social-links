@@ -33,7 +33,7 @@ In application.properties file set
  - logging levels and path to logs  
  - percent levels of minimum and maximum user interactions
 
-Run main method of SocialLinksApplication class or deploy social-links.jar
+Run main method of SocialLinksApplication class or run social-links.jar file using Java 17
 ## Usage
 To add user interaction event send POST request to   
 _your_server_address_:_your_port_/userInteraction/createUserInteraction  
@@ -43,7 +43,7 @@ with parameters
   
 To get user interactions graph send GET request to
 _your_server_address_:_your_port_/userInteraction/getUserInteractionGraph  
-In response one gets response in JSON form, for example:  
+In response one gets JSON form, for example:  
 ```
 {
     "1": [
