@@ -1,0 +1,16 @@
+db name: social_links 
+schema:public
+
+create database social_links;
+
+grant all on database social_links to your_user_name
+
+create sequence user_interaction_id_increment_seq
+increment 1
+start 1;
+
+create table user_interaction (
+    id bigint primary key,
+    initiator_user_id bigint not null,
+    acceptor_user_id bigint not null
+);
